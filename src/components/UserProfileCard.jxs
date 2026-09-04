@@ -1,0 +1,170 @@
+import React from 'react';
+import { 
+  Building, 
+  MapPin, 
+  Link as LinkIcon, 
+  Calendar, 
+  ExternalLink,
+  Twitter
+} from 'lucide-react';
+
+export function UserProfileCard({ user }) {
+  const formattedJoinedDate = new Date(user.created_at).toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
+
+  const cleanBlogUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `https://${url}`;
+  };
+
+  return (
+    <div className="w-full flex flex-col gap-6">
+      {/* Main Profile Info Card */}
+      <article
+        id="user-profile-card"
+        className="w-full bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/80 transition-all flex flex-col items-center text-center"
+      >
+        {/* Avatar */}
+        <div className="relative mb-4">
+          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-xl overflow-hidden ring-1 ring-slate-200">
+            <img
+              id="user-avatar"
+              src={user.avatar_url}
+              alt={`${user.name || user.login}'s avatar`}
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Name & Handle */}
+        <h2 id="user-name" className="text-2xl font-bold text-slate-800 tracking-tight">
+          {user.name || user.login}
+        </h2>
+        <a
+          id="user-login"
+          href={user.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:underline inline-flex items-center gap-1 mb-4"
+        >
+          @{user.login}
+          <ExternalLink className="w-3.5 h-3.5" />
+        </a>
+
+        {/* Bio */}
+        <p id="user-bio" className="text-slate-600 text-sm leading-relaxed mb-6 max-w-sm">
+          {user.bio || (
+            <span className="text-slate-400 italic">No bio available</span>
+          )}
+        </p>
+
+        {/* Key Stats Counter Grid */}
+        <div className="grid grid-cols-3 gap-2 w-full pt-6 border-t border-slate-100 text-center">
+          <div id="stat-public-repos" className="px-1">
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">
+              {Number(user.public_repos || 0).toLocaleString()}
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-0.5">
+              Repositories
+            </p>
+          </div>
+
+          <div id="stat-followers" className="px-1">
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">
+              {Number(user.followers || 0).toLocaleString()}
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-0.5">
+              Followers
+            </p>
+          </div>
+
+          <div id="stat-following" className="px-1">
+            <p className="text-2xl font-bold text-slate-800 tracking-tight">
+              {Number(user.following || 0).toLocaleString()}
+            </p>
+            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-0.5">
+              Following
+            </p>
+          </div>
+        </div>
+
+        {/* Meta Details List */}
+        <div className="w-full mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2.5 text-left text-xs text-slate-600">
+          {user.company && (
+            <div className="flex items-center gap-2">
+              <Building className="w-4 h-4 text-slate-400 shrink-0" />
+              <span className="truncate">{user.company}</span>
+            </div>
+          )}
+
+          {user.location && (
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+              <span className="truncate">{user.location}</span>
+            </div>
+          )}
+
+          {user.blog && (
+            <a
+              href={cleanBlogUrl(user.blog)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-indigo-600 hover:underline truncate"
+            >
+              <LinkIcon className="w-4 h-4 text-slate-400 shrink-0" />
+              <span className="truncate">{user.blog.replace(/^https?:\/\//, '')}</span>
+            </a>
+          )}
+
+          {user.twitter_username && (
+            <a
+              href={`https://twitter.com/${user.twitter_username}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-indigo-600 hover:underline"
+            >
+              <Twitter className="w-4 h-4 text-slate-400 shrink-0" />
+              <span>@{user.twitter_username}</span>
+            </a>
+          )}
+
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-slate-400 shrink-0" />
+            <span>Joined {formattedJoinedDate}</span>
+          </div>
+        </div>
+
+        {/* Action button */}
+        <div className="w-full mt-6">
+          <a
+            id="view-github-button"
+            href={user.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-medium text-xs rounded-xl transition-colors"
+          >
+            <span>Open in GitHub</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      </article>
+
+      {/* Sleek Theme Indigo Status Card */}
+      <div className="bg-indigo-900 text-white p-6 rounded-3xl shadow-lg shadow-indigo-100/50">
+        <p className="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-2">
+          Profile Status
+        </p>
+        <div className="flex items-center gap-3">
+          <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse shrink-0" />
+          <span className="font-medium text-sm text-indigo-50">
+            Active Developer &bull; Verified Public Profile
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
